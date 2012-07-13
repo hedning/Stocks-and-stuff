@@ -1,27 +1,28 @@
 #!/bin/zsh
 
+() {
 # globs with no match won't cause an error
 setopt nullglob
 
 # Preferences
-REMOTEPATH="/mnt/lacie/bors"
-LOCALPATH="$HOME/docs/bors"
-DROPBOX="$HOME/Dropbox/bors"
+local REMOTEPATH="/mnt/lacie/bors"
+local LOCALPATH="$HOME/docs/bors"
+local DROPBOX="$HOME/Dropbox/bors"
 
-TYPENAME=""
+local TYPENAME=""
 
-relname() {
+local relname() {
 	echo $PWD | sed -e "s=^$REMOTEPATH=="
 }
 
-copy() {
+local copy() {
 	echo $LOCALPATH$(relname)
 	cp -v -n --preserve=timestamps $* $LOCALPATH$(relname)
 	echo "copy done"
 }
 
 
-tar_day() {
+local tar_day() {
 	local DATE=$1
 	local NAME=$TYPENAME.$DATE.$2.tar
 	echo "\nTarring $DATE"
@@ -32,8 +33,8 @@ tar_day() {
 	fi
 }
 
-tar_days() {
-	i=-1
+local tar_days() {
+	local i=-1
 	while ((i++ < 400)); do
 		local DATE=$(date -d "$i days ago" "+%F")
 		local DAY=$(date -d "$DATE" "+%a")
@@ -52,7 +53,7 @@ tar_days() {
 	done
 }
 
-tar_gzip_copy() {
+local tar_gzip_copy() {
 	echo "starting copy and gzip"
 	copy *csv
 	tar_days csv
@@ -63,13 +64,13 @@ tar_gzip_copy() {
 	cd ..
 }
 
-xls_to_csv_and_clean() {
-ERROR=()
+local xls_to_csv_and_clean() {
+	local ERROR=()
 	if ! [[ -d xls ]]; then
 		mkdir xls
 	fi
 
-
+	local xls
 	for xls in *.xls; do
 		CSV=${xls/.xls/.csv}
 		echo $CSV
@@ -90,7 +91,7 @@ ERROR=()
 
 if cd $REMOTEPATH; then 
 
-	TODAY=$(date "+%F")
+	local TODAY=$(date "+%F")
 	for i in index-intraday intraday; do
 		TYPENAME=$i
 		cd $REMOTEPATH/$i
@@ -100,3 +101,4 @@ if cd $REMOTEPATH; then
 	done
 
 fi
+}
