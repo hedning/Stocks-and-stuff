@@ -8,7 +8,7 @@ REMOTEPATH="/mnt/lacie/bors"
 LOCALPATH="$HOME/docs/bors"
 DROPBOX="$HOME/Dropbox/bors"
 
-
+TYPENAME=""
 
 relname() {
 	echo $PWD | sed -e "s=^$REMOTEPATH=="
@@ -23,7 +23,7 @@ copy() {
 
 tar_day() {
 	local DATE=$1
-	local NAME=$(basename $PWD).$DATE.$2.tar
+	local NAME=$TYPENAME.$DATE.$2.tar
 	echo "\nTarring $DATE"
 	if ! [[ -f "$NAME" ]]; then
 		tar --remove-files -vcf $NAME *$DATE.$2
@@ -92,6 +92,7 @@ if cd $REMOTEPATH; then
 
 	TODAY=$(date "+%F")
 	for i in index-intraday intraday; do
+		TYPENAME=$i
 		cd $REMOTEPATH/$i
 		xls_to_csv_and_clean
 		tar_gzip_copy
