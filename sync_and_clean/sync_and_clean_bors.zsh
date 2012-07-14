@@ -97,7 +97,7 @@ if cd $REMOTEPATH; then
 		cd $REMOTEPATH/$i
 		xls_to_csv_and_clean
 		tar_gzip_copy
-		gzip -c *$TODAY.csv.tar > $DROPBOX/intraday.$TODAY.csv.tar.gz
+		gzip -c *$TODAY.csv.tar > $DROPBOX/$TYPENAME.$TODAY.csv.tar.gz
 	done
 
 fi
