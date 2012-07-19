@@ -5,8 +5,8 @@ MAXDELAY=20
 RANDOM_SCALE=$(( 32767/(MAXDELAY-MINDELAY) ))
 
 SHUFFLE="cat -"
-if [[ -x /usr/lib/filo/shuffle ]]; then
-	SHUFFLE="/usr/lib/filo/shuffle"
+if [[ -x /usr/bin/shuf ]]; then
+	SHUFFLE="/usr/bin/shuf"
 fi
 
 ERROR=()
