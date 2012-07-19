@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# http://www.oslobors.no/markedsaktivitet/servlets/newt/tradesExcel-stockIndex?item=OSEBX&exch=ose&period=month&start=&stop=
+# http://www.oslobors.no/markedsaktivitet/servlets/newt/tradesExcel-stockIndex?item=OSEBX&exch=ose&period=&start=04.05.10&stop=05.05.10
+# http://www.oslobors.no/markedsaktivitet/servlets/newt/tradesExcel-stock?item=YAR&exch=ose&period=3year&start=&stop=
+
+BASE_URL=http://www.oslobors.no/markedsaktivitet/servlets/newt
+TYPE_STOCK=tradesExcel-stock
+TYPE_INDEX=tradesExcel-stockIndex
+
+URL_STOCK="$BASE_URL/${TYPE_STOCK}?exch=ose"
+URL_INDEX="$BASE_URL/${TYPE_INDEX}?exch=ose"
+
+URL=$URL_STOCK
+
+
+if [ "$1" == "--index" ]; then
+	URL=$URL_INDEX
+	shift
+fi
+
+ITEM=$1
+shift
+
+if [ "$#" -gt 1 ]; then
+	START=$1
+	STOP=$2
+else
+	PERIOD=$1
+fi
+
+
+wget "${URL}&item=${ITEM}&period=${PERIOD}&start=${START}&stop=${STOP}" -O $ITEM.xls
