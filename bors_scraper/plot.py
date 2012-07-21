@@ -3,13 +3,14 @@
 from matplotlib.pyplot import *
 from matplotlib.dates import date2num
 from datetime import datetime
+from numpy import array, sum
 import argparse
 from glob import glob
 from csv import reader
 
 opts = argparse.ArgumentParser(description='Plot graphs for different tickers')
 
-opts.add_argument('tickers', metavar='ticker', type=str, nargs='+',
+opts.add_argument('tickers', metavar='TICKER', type=str, nargs='+',
 		help='The tickers you want to plot')
 
 args = opts.parse_args()
@@ -29,8 +30,8 @@ for d in data:
 
 	columns = zip(*d[2:])
 
-	dates = columns[0]
-	dates = [date2num(strptime(d, "%d.%m.%y")) for d in dates]
+	dates = [date2num(strptime(d, "%d.%m.%y")) for d in columns[0]]
+	dates = array(dates)
 	prices = list(columns[1])
 
 	print 'tickers: ' + str(tickers)
@@ -40,6 +41,7 @@ for d in data:
 
 	for i, v in enumerate(prices):
 		prices[i] = float(v) if len(v) > 0 else float(prices[i-1])
+	prices = array(prices)
 
 	plot_date(dates, prices, **style)
 
