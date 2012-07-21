@@ -54,4 +54,5 @@ for d in data:
 
 	plot_date(dates, prices, **style)
 
+grid(True)
 show()
