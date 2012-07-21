@@ -3,20 +3,23 @@
 from matplotlib.pyplot import *
 from matplotlib.dates import date2num
 from datetime import datetime
-from sys import argv
+import argparse
 from glob import glob
 from csv import reader
 
-strptime = datetime.strptime
+opts = argparse.ArgumentParser(description='Plot graphs for different tickers')
 
+opts.add_argument('tickers', metavar='ticker', type=str, nargs='+',
+		help='The tickers you want to plot')
+
+args = opts.parse_args()
 data = []
 tickers = []
-for ticker in argv[1:]:
-	ticker = ticker.upper()
+for ticker in (x.upper() for x in args.tickers):
 	data.extend(glob(ticker + '.daily*.csv'))
 	tickers.append(ticker)
 
-print data
+strptime = datetime.strptime
 
 style={'linestyle': '-', 'marker': None}
 colors = ['b', 'g', 'c', 'm', 'y', 'k', 'w']
