@@ -68,7 +68,6 @@ for d in data:
 
 	dates = array(dates)
 
-	style['label'] = tickers[0]; del tickers[0]
 	style['color'] = colors[0]; del colors[0]
 
 	for i, v in enumerate(prices):
@@ -78,4 +77,5 @@ for d in data:
 	plot_date(dates, prices, **style)
 
 grid(True)
+legend(tickers)
 show()
