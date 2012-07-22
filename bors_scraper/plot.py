@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from os import popen
 from matplotlib.pyplot import *
 from matplotlib.dates import date2num
 from datetime import datetime
@@ -21,6 +22,10 @@ opts.add_argument('tickers', metavar='TICKER', type=str, nargs='+',
 opts.add_argument('--normalize', '-n', dest='normalize', default=identity,
 		const=normalize, action='store_const',
 		help='Normalize the start values of the tickers')
+opts.add_argument('--from', '-f', type=str, dest='start',
+		help='From when you want the plot to start, defaults to as far back as possible. Specify in date\'s humanreadable form')
+opts.add_argument('--to', '-t', type=str, dest='to',
+		help='When you want to the plot to stop, defaults to the current date.Specify in date\'s humanreadable form.')
 
 args = opts.parse_args()
 data = []
@@ -31,6 +36,16 @@ for ticker in (x.upper() for x in args.tickers):
 
 strptime = datetime.strptime
 
+def get_date(string):
+	date = popen('date -d "' + string + '" "+%F"').read()
+	return date2num(datetime(*(int(x) for x in date.split('-'))))
+
+def get_index(date, dates):
+	for i, v in enumerate(dates):
+		if v >= date:
+			break
+	return i
+
 style={'linestyle': '-', 'marker': None}
 colors = ['b', 'g', 'c', 'm', 'y', 'k', 'w']
 
@@ -39,14 +54,22 @@ for d in data:
 
 	columns = zip(*d[2:])
 
-	dates = [date2num(strptime(d, "%d.%m.%y")) for d in columns[0]]
-	dates = array(dates)
 	prices = list(columns[1])
+	dates = [date2num(strptime(d, "%d.%m.%y")) for d in columns[0]]
 
-	print 'tickers: ' + str(tickers)
+	if args.start != None:
+		start = get_date(args.start)
+		i = get_index(start, dates)
+		dates, prices = dates[i:], prices[i:]
+	if args.to !=None:
+		to = get_date(args.to)
+		i = get_index(to, dates)
+		dates, prices = dates[:i+1], prices[:i+1]
+
+	dates = array(dates)
+
 	style['label'] = tickers[0]; del tickers[0]
 	style['color'] = colors[0]; del colors[0]
-	print style
 
 	for i, v in enumerate(prices):
 		prices[i] = float(v) if len(v) > 0 else float(prices[i-1])
