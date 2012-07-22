@@ -44,6 +44,8 @@ def main():
 	parser.add_option("-o", "--out", default="-")
 	parser.add_option("-p", "--print-category", action="store_true", default=False,
 			help="")
+	parser.add_option("--page", default="1",
+			help="the page you want")
 	options, args = parser.parse_args()
 	
 	if options.print_category:
@@ -55,8 +57,8 @@ def main():
 	to_param = parse_date(options.to) if options.to != None else datetime.now()
 
 	post_params = {
-"selectedPagenumber":"0",
-"searchSubmitType":"searchtype.full",
+"selectedPagenumber": options.page,
+"searchSubmitType":"searchtype",
 "searchtype":"full",
 "searchCriteria.issuerId":get_ticker_id(options.ticker),
 "searchCriteria.instrumentId":"-1",
@@ -71,7 +73,7 @@ def main():
 }
 	post_data = urlencode(post_params) 
 
-	subprocess.call(["wget", "-O", options.out, "--post-data", post_data, "http://www.newsweb.no/newsweb/search.do"])
+	subprocess.call(["wget", "-O", options.out, "--post-data", post_data, "http://www.newsweb.no/newsweb/search.do", '--save-cookies', '.cookies.txt', '--load-cookies', '.cookies.txt', '--keep-session-cookies'])
 
 	# whoooo.. for some reason httplib2 and newsweb are not best friends...
 	#http = Http()
