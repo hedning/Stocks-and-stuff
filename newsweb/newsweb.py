@@ -44,7 +44,7 @@ def main():
 	parser.add_option("-o", "--out", default="-")
 	parser.add_option("-p", "--print-category", action="store_true", default=False,
 			help="")
-	parser.add_option("--page", default="1",
+	parser.add_option("--page", default="0",
 			help="the page you want")
 	options, args = parser.parse_args()
 	
@@ -58,7 +58,7 @@ def main():
 
 	post_params = {
 "selectedPagenumber": options.page,
-"searchSubmitType":"searchtype",
+"searchSubmitType":"searchtype.full" if options.page == '0' else 'searchtype',
 "searchtype":"full",
 "searchCriteria.issuerId":get_ticker_id(options.ticker),
 "searchCriteria.instrumentId":"-1",
