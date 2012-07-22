@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from os import popen
+from subprocess import check_output
 from matplotlib.pyplot import *
 from matplotlib.dates import date2num
 from datetime import datetime
@@ -37,7 +37,7 @@ for ticker in (x.upper() for x in args.tickers):
 strptime = datetime.strptime
 
 def get_date(string):
-	date = popen('date -d "' + string + '" "+%F"').read()
+	date = check_output(['date', '-d', string, '+%F'])
 	return date2num(datetime(*(int(x) for x in date.split('-'))))
 
 def get_index(date, dates):
