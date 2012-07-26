@@ -43,19 +43,37 @@ def get_index(date, dates):
 			break
 	return i
 
-def dates2nums(dates):
-	return [date2num(strptime(d, "%Y-%m-%d")) for d in dates]
+def strp2num(d):
+	return date2num(strptime(d, "%Y-%m-%d"))
+
+def str2float(s):
+#	print 'string: "' + str(len(s)) +'"'
+	return float(s) if len(s) > 0 else 0
+
+def parse_columns(li, form):
+	columns = zip(*li)
+	for i, v in enumerate(columns):
+		if len(form) > i and form[i] != None:
+			columns[i] = [form[i](x) for x in v]
+	return columns
+
 
 style={'linestyle': '-', 'marker': None}
 colors = ['b', 'g', 'c', 'm', 'y', 'k', 'w']
 
 for d in data:
-	d = (x for x in reader(open(d)))
+	d = open(d); d.readline(); d.readline()
+	d = (x for x in reader(d))
 
-	columns = zip(*d)
+	forms = [strp2num, str2float]
+	dates, prices = parse_columns(d, forms)[0:2]
 
-	prices = list(columns[1][2:])
-	dates = dates2nums(columns[0][2:])
+	i = 0
+	while i < len(prices):
+		if  prices[i] == 0:
+			del prices[i], dates[i]
+			continue
+		i += 1
 
 	if args.start != None:
 		start = get_date(args.start)
@@ -66,12 +84,8 @@ for d in data:
 		i = get_index(to, dates)
 		dates, prices = dates[:i+1], prices[:i+1]
 
-	dates = array(dates)
-
 	style['color'] = colors[0]; del colors[0]
 
-	for i, v in enumerate(prices):
-		prices[i] = float(v) if len(v) > 0 else float(prices[i-1])
 	prices = args.normalize(array(prices))
 
 	plot_date(dates, prices, **style)
