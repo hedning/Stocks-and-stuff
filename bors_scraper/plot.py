@@ -52,7 +52,7 @@ for d in data:
 	columns = zip(*d[2:])
 
 	prices = list(columns[1])
-	dates = [date2num(strptime(d, "%d.%m.%y")) for d in columns[0]]
+	dates = [date2num(strptime(d, "%Y-%m-%d")) for d in columns[0]]
 
 	if args.start != None:
 		start = get_date(args.start)
