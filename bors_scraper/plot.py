@@ -43,16 +43,19 @@ def get_index(date, dates):
 			break
 	return i
 
+def dates2nums(dates):
+	return [date2num(strptime(d, "%Y-%m-%d")) for d in dates]
+
 style={'linestyle': '-', 'marker': None}
 colors = ['b', 'g', 'c', 'm', 'y', 'k', 'w']
 
 for d in data:
-	d = [x for x in reader(open(d))]
+	d = (x for x in reader(open(d)))
 
-	columns = zip(*d[2:])
+	columns = zip(*d)
 
-	prices = list(columns[1])
-	dates = [date2num(strptime(d, "%Y-%m-%d")) for d in columns[0]]
+	prices = list(columns[1][2:])
+	dates = dates2nums(columns[0][2:])
 
 	if args.start != None:
 		start = get_date(args.start)
