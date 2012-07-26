@@ -12,14 +12,11 @@ from csv import reader
 def normalize(array):
 	return 100*array/array[0]
 
-def identity(t):
-	return t
-
 opts = argparse.ArgumentParser(description='Plot graphs for different tickers')
 
 opts.add_argument('tickers', metavar='TICKER', type=str, nargs='+',
 		help='The tickers you want to plot')
-opts.add_argument('--normalize', '-n', dest='normalize', default=identity,
+opts.add_argument('--normalize', '-n', dest='normalize', default=lambda x: x,
 		const=normalize, action='store_const',
 		help='Normalize the start values of the tickers')
 opts.add_argument('--from', '-f', type=str, dest='start',
