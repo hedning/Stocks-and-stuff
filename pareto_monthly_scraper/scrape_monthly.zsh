@@ -28,14 +28,15 @@ for p in 'ingrid' 'varp'; do
 	fi
 	cd $p
 	while ((++i >= 0)); do
-		local name=M$(date -d "$i month ago" "+%Y%m").pdf
-		if [[ -f $name ]]; then
-			echo "$name already downloaded, presuming $p is up to date."
+		local name=$(date -d "$i month ago" "+M%Y%m.pdf")
+		local out=$(date -d "$i month ago" "+$p.%Y-%m.pdf")
+		if [[ -f $out ]]; then
+			echo "$out already downloaded, presuming $p is up to date."
 			break
 		fi
 		url=$base$file$name$porto$p[1]$lang
-		wget --load-cookies $cookie $url --output-document $name
-		if [[ $? == 8 ]]; then
+		wget --load-cookies $cookie $url --output-document $out
+		if [[ $? != 0 ]]; then
 			echo "$name not found on server"
 			rm $name
 			break
