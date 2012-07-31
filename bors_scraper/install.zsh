@@ -2,7 +2,7 @@
 DIR=$HOME/bin
 
 if ! [[ -f $HOME/.borsscrape ]]; then
-	echo "Installing preferences in $HOME/.borsscrape"
+	echo "Installing preferences in $HOME/.borsscraperrc"
 	cp PREFERENCES $HOME/.borsscraperc
 fi
 
@@ -16,3 +16,5 @@ for i in *.zsh *.py; do
 	echo "Installing $i in $REPO"
 	cp $i $REPO
 done
+
+git show | head -n 1 > $REPO/version
