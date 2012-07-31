@@ -9,6 +9,8 @@ REMOTEPATH="/mnt/lacie/bors"
 LOCALPATH="$HOME/docs/bors"
 DROPBOX="$HOME/Dropbox/bors"
 
+. $HOME/.borsscraperc
+
 TYPENAME=""
 
 relname() {
@@ -60,8 +62,8 @@ tar_days() {
 
 tar_gzip_copy() {
 	echo "\nStarting copy and gzip in $PWD"
-	if glob_exist "*csv"; then
-		copy *csv
+	if glob_exist "*.csv"; then
+		copy *.csv
 	fi
 	tar_days csv
 	echo "Entering xls"
@@ -93,7 +95,7 @@ xls_to_csv_and_clean() {
 		if  [[ 0 == $? || -e $CSV ]]; then
 			mv $xls xls
 			sed -i -e "3s/^Date.*//" -e "/^\w*$/d" $CSV
-			sleep 4
+			$REPO/stripcomma.py -i $CSV
 		else
 			ERROR+=out
 		fi
