@@ -8,7 +8,11 @@ fi
 
 . $HOME/.borsscraperc
 
-for i in *.zsh~install.zsh *.py; do
+if ! [[ -d $REPO ]]; then
+	mkdir $REPO
+fi
+
+for i in *.zsh *.py; do
 	echo "Installing $i in $REPO"
 	cp $i $REPO
 done
