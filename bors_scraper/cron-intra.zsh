@@ -8,6 +8,7 @@ for type in index-intraday intraday; do
 	fi
 done
 
+$REPO/ticker_scraper.zsh
 
 cd $REPO/index-intraday
 if [[ -f ../ticker-lists/indexes ]]; then
