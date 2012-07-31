@@ -3,7 +3,7 @@
 . $HOME/.borsscraperc
 
 for type in index-intraday intraday; do
-	if ![[ -d $type ]]; then
+	if ! [[ -d $type ]]; then
 		mkdir $type
 	fi
 done
