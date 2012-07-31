@@ -1,32 +1,19 @@
 #!/bin/zsh
 
-PATH=$PATH:$HOME/bin
+. $HOME/.borsscraperc
 
-
-xls_to_csv_and_clean() {
-ERROR=()
-	if ! [[ -d xls ]]; then
-		mkdir xls
+for type in index-intraday intraday; do
+	if ![[ -d $type ]]; then
+		mkdir $type
 	fi
-
-	for xls in *.xls; do
-		out=$(xls2csv $xls)
-		if  [[ 0 == $? || -e ${xls/.xls#/.csv} ]]; then
-			mv $xls xls
-		else
-			ERROR+=out
-		fi
-	done
-	if [[ $#ERROR -gt 0 ]]; then
-		echo "$ERROR" > xls_to_csv.log
-	fi
-}
+done
 
 
-cd ~/docs/oslo-bors/index-intraday
-../do-list-delay.zsh ../get-index-intraday.zsh < ../ticker-lists/indexes &>> ../log
-xls_to_csv_and_clean
+cd $REPO/index-intraday
+if [[ -f ../ticker-lists/indexes ]]; then
+	../do-list-delay.zsh ../get-index-intraday.zsh < ../ticker-lists/indexes &>> ../log
+fi
 
-cd ~/docs/oslo-bors/intraday
+cd $REPO/intraday
 ../do-list-delay.zsh ../get-ticker-intraday.zsh < ../ticker-lists/oslo-bors-tickers &>> ../log
-xls_to_csv_and_clean
+
