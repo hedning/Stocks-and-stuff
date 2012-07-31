@@ -2,7 +2,7 @@
 DIR=$HOME/bin
 
 if ! [[ -f $HOME/.borsscrape ]]; then
-	echo "Installing preferences in $HOME/.borsscraperrc"
+	echo "Installing preferences in $HOME/.borsscraperc"
 	cp PREFERENCES $HOME/.borsscraperc
 fi
 
