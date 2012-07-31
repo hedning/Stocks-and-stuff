@@ -15,8 +15,6 @@ def strip(string):
 			return string
 	return out
 
-
-
 def stripfi(name):
 	data = [[strip(s) for s in x ]for x in csv.reader(open(name))]
 	writer = csv.writer(stdout)
