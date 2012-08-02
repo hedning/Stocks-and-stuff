@@ -95,7 +95,9 @@ xls_to_csv_and_clean() {
 		if  [[ 0 == $? || -e $CSV ]]; then
 			mv $xls xls
 			sed -i -e "3s/^Date.*//" -e "/^\w*$/d" $CSV
-			$REPO/stripcomma.py -i $CSV
+			tr -d '\r' < $CSV | sponge $CSV
+			$LOCALPATH/stripcomma.py -i $CSV
+			sed -i -r 's/([0-9]{2}).([0-9]{2}).([0-9]{2})/20\3-\2-\1/' $CSV
 		else
 			ERROR+=out
 		fi
