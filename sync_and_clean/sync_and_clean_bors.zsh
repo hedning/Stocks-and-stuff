@@ -44,20 +44,15 @@ tar_day() {
 	fi
 }
 
-tar_days() {
-	i=-1
-	while ((++i > -1)); do
-		DATE=$(date -d "$i days ago" "+%F")
-		if glob_exist "*$DATE.$1"; then
-			echo "Tarring $DATE"
-			tar_day $DATE $1
-		else
-			if ! glob_exist "*.$1"; then
-				echo "No $1 files to process"
-				break
-			fi
-		fi
+execute_days() {
+	GLOB=$1
+	COMMAND=$2
+	while MATCH=$(first_match "*.$GLOB"); do
+		# field needs to be 4, as $MATCH is ./filename
+		DATE=$(echo $MATCH | cut -d. -f 4)
+		$COMMAND $DATE $1
 	done
+	echo "Done $COMMAND on $GLOB files"
 }
 
 tar_gzip_copy() {
@@ -65,10 +60,10 @@ tar_gzip_copy() {
 	if glob_exist "*.csv"; then
 		copy *.csv
 	fi
-	tar_days csv
+	execute_days csv tar_day
 	echo "Entering xls"
 	cd xls
-	tar_days xls
+	execute_days xls tar_day
 	if glob_exist "*.tar"; then
 		gzip --verbose *.tar
 	fi
